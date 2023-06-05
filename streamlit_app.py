@@ -10,7 +10,7 @@ def get_fruit_list():
 
 def get_multiselect_fruit_list(fruit_list):
     preselected_fruits = ["Avocado", "Strawberries"]
-    st.multiselect("Pick some fruits:", list(fruit_list.index), preselected_fruits)
+    return st.multiselect("Pick some fruits:", list(fruit_list.index), preselected_fruits)
 
 
 def main() -> None:
@@ -23,8 +23,9 @@ def main() -> None:
     st.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
 
     my_fruit_list = get_fruit_list()
-    get_multiselect_fruit_list(my_fruit_list)
-    st.dataframe(my_fruit_list)
+    fruits_selected = get_multiselect_fruit_list(my_fruit_list)
+    fruits_to_show = my_fruit_list.loc[fruits_selected]
+    st.dataframe(fruits_to_show)
 
 
 if __name__ == "__main__":
