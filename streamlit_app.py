@@ -3,7 +3,15 @@ import snowflake.connector
 import pandas as pd
 import requests
 
-
+def display_headers():
+    st.header('Breakfast Favorites')
+    st.text('🥣 Omega 3 & Blueberry Oatmeal')
+    st.text('🥗 Kale, Spinach & Rocket Smoothie')
+    st.text('🐔 Hard-Boiled Free-Range Egg')
+    st.text('🥑🍞 Avocado Toast')
+    st.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
+    st.markdown("""---""")
+    
 def get_fruit_list():
     fruit_list = pd.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
     fruit_list = fruit_list.set_index("Fruit")
@@ -16,21 +24,7 @@ def get_multiselect_fruit_list(fruit_list):
 
 
 def main() -> None:
-    # Snowflake connector
-    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
-    my_cur = my_cnx.cursor()
-    my_cur.execute("select * from fruit_load_list")
-    my_data_rows = my_cur.fetchall()
-    st.header("The fuirt load list contains:")
-    st.dataframe(my_data_rows)
-    
-    st.header('Breakfast Favorites')
-    st.text('🥣 Omega 3 & Blueberry Oatmeal')
-    st.text('🥗 Kale, Spinach & Rocket Smoothie')
-    st.text('🐔 Hard-Boiled Free-Range Egg')
-    st.text('🥑🍞 Avocado Toast')
-
-    st.header('🍌🥭 Build Your Own Fruit Smoothie 🥝🍇')
+    display_headers()
 
     my_fruit_list = get_fruit_list()
     fruits_selected = get_multiselect_fruit_list(my_fruit_list)
@@ -47,6 +41,17 @@ def main() -> None:
     fruityvice_normalized = pd.json_normalize(fruityvice_response.json())
     # output the screen as a table
     st.dataframe(fruityvice_normalized)
+    
+    # Snowflake connector
+    my_cnx = snowflake.connector.connect(**st.secrets["snowflake"])
+    my_cur = my_cnx.cursor()
+    my_cur.execute("select * from fruit_load_list")
+    my_data_rows = my_cur.fetchall()
+    st.header("The fruit load list contains:")
+    st.dataframe(my_data_rows)
+    
+    add_my_fruit = st.text_input('What fruit would you like to add ?','jackfruit')
+    st.write('Thank you for adding: ', add_my_fruit)
 
 
 
